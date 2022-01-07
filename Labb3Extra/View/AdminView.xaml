@@ -1,0 +1,141 @@
+﻿<UserControl
+    x:Class="Labb3Extra.View.AdminView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Labb3Extra.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Background="PeachPuff">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="1"
+            FontSize="20"
+            Text="Store Administration Page" />
+        <Button
+            Grid.Column="1"
+            Margin="0,5,10,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Content="StartView" />
+
+        <Grid
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="1">
+
+            <TextBlock
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                FontSize="15"
+                Text="Add Products" />
+            <TextBlock
+                Grid.Row="1"
+                Width="120"
+                Margin="0,30,0,0"
+                Text="Name of the product" />
+            <TextBox
+                Width="200"
+                Height="20"
+                Margin="90,47,90,323"
+                Text="{Binding NameOfProduct, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Width="120"
+                Margin="130,72,130,-72"
+                Text="Type Of Product" />
+            <TextBox
+                Width="200"
+                Height="20"
+                Margin="90,91,90,279"
+                Text="{Binding TypeOfProduct, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Width="120"
+                Margin="130,116,130,-116"
+                Text="Price" />
+            <TextBox
+                Width="200"
+                Height="20"
+                Margin="90,132,90,238"
+                Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Width="120"
+                Margin="130,157,130,-157"
+                Text="Enter picture URL" />
+            <TextBox
+                Width="200"
+                Height="20"
+                Margin="90,175,90,195"
+                Text="{Binding Image, UpdateSourceTrigger=PropertyChanged}" />
+            <Button
+                Margin="0,0,10,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{Binding AddProductCommand}"
+                Content="Add Product" />
+
+
+        </Grid>
+
+
+        <StackPanel
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.ColumnSpan="2" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Text="Store Storage" />
+
+        <ComboBox
+            Grid.Row="1"
+            Grid.Column="2"
+            Width="100"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            ItemsSource="{Binding TypesOfProducts, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding ChosenProductType, UpdateSourceTrigger=PropertyChanged}" />
+
+        <ListView
+            Grid.Row="1"
+            Grid.Column="2"
+            Width="250"
+            Height="150"
+            ItemsSource="{Binding Products, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{Binding ChosenProduct, UpdateSourceTrigger=PropertyChanged}">
+            <ListView.View>
+                <GridView AllowsColumnReorder="True">
+                    <GridView.Columns>
+                        <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding NameOfProduct}" Header="Product" />
+                        <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding TypeOfProduct}" Header="TypeOfProduct" />
+                        <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Cost}" Header="Cost" />
+                        <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Count}" Header="Total" />
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+
+
+
+
+
+
+    </Grid>
+</UserControl>
