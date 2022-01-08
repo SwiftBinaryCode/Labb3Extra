@@ -1,12 +1,6 @@
 ﻿using Labb3Extra.Managers;
 using Labb3Extra.ViewModel;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Labb3Extra
@@ -26,6 +20,7 @@ namespace Labb3Extra
         }
 
         private IMongoDatabase _database;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);

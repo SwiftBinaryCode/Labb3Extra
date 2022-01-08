@@ -8,33 +8,44 @@ using System.Windows;
 
 namespace Labb3Extra.ViewModel
 {
-    class StartViewModel : ObservableObject
+    internal class StartViewModel : ObservableObject
     {
         //propertys  för att navigera och få activeuser
         private readonly NavigationManager _navigationManager;
+
         private readonly UserManager _userManager;
         private readonly IMongoDatabase _database;
         private readonly Managers.MongoDB _db = new("Store");
 
-
-
         //RelayCommands
         public RelayCommand AddUserCommand { get; }
-        public RelayCommand LogInCommand { get; }
+
+        public RelayCommand LogInCommand
+
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    LogInCheck();
+                    CheckRegisteredUsers(ActiveUser);
+                    AdminLogIn();
+                });
+            }
+        }
+
         public StartViewModel(NavigationManager navigationManager, UserManager userManager)
         {
             _navigationManager = navigationManager;
             _userManager = userManager;
             ActiveUser = _userManager.ActiveUser;
-            AddUserCommand = new RelayCommand(RegisterNewUser);
+
+            AddUserCommand = new RelayCommand(() => RegisterNewUser());
 
             var dbClient = new MongoClient();
             _database = dbClient.GetDatabase("Store");
-
-
             _database.GetCollection<Managers.MongoDB>("Users");
             _database.GetCollection<Managers.MongoDB>("Admin");
-
         }
 
         public void GoToUserProfile()
@@ -46,9 +57,11 @@ namespace Labb3Extra.ViewModel
         {
             _navigationManager.CurrentViewModel = new AdminViewModel(_navigationManager, _userManager);
         }
+
         private User ActiveUser { get; set; }
 
         private string _newUsername;
+
         public string NewUsername
         {
             get => _newUsername;
@@ -56,6 +69,7 @@ namespace Labb3Extra.ViewModel
         }
 
         private string _newUserPassword;
+
         public string NewUserPassword
         {
             get => _newUserPassword;
@@ -63,6 +77,7 @@ namespace Labb3Extra.ViewModel
         }
 
         private string _username;
+
         public string Username
         {
             get => _username;
@@ -70,6 +85,7 @@ namespace Labb3Extra.ViewModel
         }
 
         private string _password;
+
         public string Password
         {
             get => _password;
@@ -79,33 +95,19 @@ namespace Labb3Extra.ViewModel
         //Metoder
         public void RegisterNewUser()
         {
-            //while(true)
-            //{
-            //    if (String.IsNullOrWhiteSpace(NewUsername) || String.IsNullOrWhiteSpace(NewUserPassword))
-            //    {
-            //        MessageBox.Show("This field cant be empty pleae try again", "Woops", MessageBoxButton.OK);
-            //        return;
-            //    }
-            //    break;
-
-            //};
-
+            if (String.IsNullOrWhiteSpace(NewUsername) || String.IsNullOrWhiteSpace(NewUserPassword))
+            {
+                MessageBox.Show("Username and password fields are empty", "", MessageBoxButton.OK);
+                return;
+            }
 
             _db.InsertNew("Users", new User { Username = NewUsername, Password = NewUserPassword });
             MessageBox.Show("User Created", "Congrats", MessageBoxButton.OK);
             EmptyLogIn();
-
-
-
-
-
-
-
         }
+
         public void EmptyLogIn()
         {
-
-
             NewUsername = null;
             NewUserPassword = null;
             Username = null;
@@ -116,76 +118,55 @@ namespace Labb3Extra.ViewModel
         {
             //Get collection of users from database
             var collection = _database.GetCollection<User>("Users");
-            bool findUser = collection.Find(s => s.Username == Username).Any();
+            bool foundUser = collection.Find(s => s.Username == Username).Any();
             //Check if any of the usernames exist
-            if (findUser)
+            if (foundUser)
             {
                 ActiveUser = collection.Find(s => s.Username == Username).Single();
-
+                _userManager.ActiveUser = ActiveUser;
 
                 if (Password == _userManager.ActiveUser.Password)
                 {
-                    MessageBox.Show("Welcome {Username}", "Welcome", MessageBoxButton.OK);
-                    _userManager.ActiveUser = ActiveUser;
+                    MessageBox.Show($"Welcome {Username}", "Welcome", MessageBoxButton.OK);
                     GoToUserProfile();
                     return;
-
                 }
-                while (Password != _userManager.ActiveUser.Password)
+                else if (Password != _userManager.ActiveUser.Password)
+
                 {
-                    MessageBox.Show("Opps", "Wrong Password", MessageBoxButton.OK);
+                    MessageBox.Show("Wrong Password", "Try Again", MessageBoxButton.OK);
                     EmptyLogIn();
-
-
                 }
             }
         }
+
         public void AdminLogIn()
         {
             //Get the collection of admin users from the database
-            var collection = _database.GetCollection<User>("Admin");
-            //var AdminFound =
+            var Admincollection = _database.GetCollection<User>("Admin");
+            bool adminFound = Admincollection.Find(a => a.Username == Username).Any();
 
-
-
-            //create a variable the checks if the admin exits
-            //bool Find = adminCollection.Find(a => a.Username == Username).Any();
-            //If statment that checks the og in and if its succesful they go to the admin view
-
-            //if (AdminFound)
-            //{
-            //    MessageBox.Show($"You have logged in as {Username}", "Welcome Admin", MessageBoxButton.OK);
-            //    Username = null;
-            //    Password = null;
-            //    GoToAdminView();
-            //}
-
-            EmptyLogIn();
-
+            if (adminFound)
+            {
+                MessageBox.Show($"You have logged in as {Username}", "Welcome Admin", MessageBoxButton.OK);
+                EmptyLogIn();
+                GoToAdminView();
+            }
         }
 
+        public void LogInCheck()
+        {
+            var collection = _database.GetCollection<User>("Users");
+            bool foundUser = collection.Find(s => s.Username == Username).Any();
 
+            var Admincollection = _database.GetCollection<User>("Admin");
+            bool adminFound = Admincollection.Find(a => a.Username == Username).Any();
 
-        //public void LogInCheck()
-        //{
-        //    //get both admin and users from the database
-        //    var collection = _database.GetCollection<User>("Users");
-        //    var foundUser = ;
-        //    var Adminlocator = _database.GetCollection<User>("Admin");
-        //    var foundAdmin =
-        //    //If tatment to check if any of the users exits if not show a message
-
-        //    if (!foundUser && !foundAdmin)
-        //    {
-        //        MessageBox.Show(
-        //         "Sorry incorrect log in details try again.", "Error",
-        //         MessageBoxButton.OK);
-
-        //        EmptyLogIn();
-        //    }
-
-
-        //}
-
+            if (!foundUser && !adminFound)
+            {
+                MessageBox.Show("Sorry incorrect log in details try again.", "Error", MessageBoxButton.OK);
+                EmptyLogIn();
+            }
+        }
     }
 }

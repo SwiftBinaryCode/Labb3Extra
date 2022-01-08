@@ -66,8 +66,7 @@
             <Label
                 HorizontalAlignment="Right"
                 Content="Sort Product type"
-                FontSize="10" 
-                />
+                FontSize="10" />
             <ComboBox
                 Width="60"
                 HorizontalAlignment="Right"
@@ -85,7 +84,6 @@
                 Width="100"
                 Height="20"
                 Content="Go To UserProfile " />
-
         </StackPanel>
 
         <Image
@@ -95,7 +93,5 @@
             Height="100"
             Margin="0,20,0,0"
             Source="{Binding Image}" />
-
-
     </Grid>
 </UserControl>

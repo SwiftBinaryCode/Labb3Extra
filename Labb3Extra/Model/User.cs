@@ -1,37 +1,34 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
+using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Labb3Extra.Model
 {
-    class User:ObservableObject
+    internal class User : ObservableObject
     {
         //Propertys
-        public ObjectId Id { get; set;}
+        [BsonId]
+        public ObjectId Id { get; set; }
+
+        [BsonElement]
         public string Username { get; set; }
 
+        [BsonElement]
         public string Password { get; set; }
 
+        [BsonElement]
         public ObservableCollection<Product> Cart { get; set; }
 
         public User()
 
         {
-
             Cart = new ObservableCollection<Product>();
-
         }
+
         public override string ToString()
         {
-            return $"Du är inloggad som: {Username}";
+            return $"{Username}";
         }
-
-
-
     }
 }

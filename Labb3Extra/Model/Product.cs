@@ -1,17 +1,11 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Labb3Extra.Model
 {
-    class Product : ObservableObject
+    internal class Product : ObservableObject
     {
-       
         private readonly IMongoDatabase _database;
 
         public ObjectId Id { get; set; }
@@ -19,9 +13,11 @@ namespace Labb3Extra.Model
 
         public string TypeOfProduct { get; set; }
 
+        public string Image { get; set; }
+
         public double Price { get; set; }
 
-        public int Amount { get; set; }
+        public int Count { get; set; }
 
         public Product()
         {
@@ -29,7 +25,10 @@ namespace Labb3Extra.Model
             _database = db.GetDatabase("Store");
             _database.GetCollection<Managers.MongoDB>("Products");
         }
-        //ToStringMethod
 
+        public override string ToString()
+        {
+            return $"{NameOfProduct}";
+        }
     }
 }

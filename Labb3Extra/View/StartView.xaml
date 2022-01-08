@@ -29,7 +29,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             FontSize="30"
-            Text="Welcom to the store"
+            Text="Welcome to the store"
             TextWrapping="Wrap" />
         <TextBlock
             Grid.Row="1"
@@ -39,37 +39,6 @@
             FontSize="25"
             Text="New User"
             TextWrapping="Wrap" />
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="2"
-            Width="264"
-            Height="43"
-            Margin="0,5,0,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            FontSize="25"
-            Text="Registered user/Admin"
-            TextWrapping="Wrap" />
-      
-        <TextBox
-            Grid.Row="1"
-            Grid.Column="1"
-            Width="120"
-            Margin="0,76,0,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}"
-            TextWrapping="Wrap" />
-        <TextBox
-            Grid.Row="2"
-            Grid.Column="1"
-            Width="120"
-            Margin="143,31,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
-            TextWrapping="Wrap" />
-
 
         <TextBlock
             Grid.Row="1"
@@ -84,7 +53,7 @@
             Margin="0,76,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Text="{Binding NewUserName, UpdateSourceTrigger=PropertyChanged}"
+            Text="{Binding NewUsername, UpdateSourceTrigger=PropertyChanged}"
             TextWrapping="Wrap" />
         <TextBlock
             Grid.Row="2"
@@ -111,12 +80,34 @@
             FontSize="15" />
         <TextBlock
             Grid.Row="1"
-            Grid.Column="1"
-            Margin="0,54,0,0"
+            Grid.Column="2"
+            Width="264"
+            Height="43"
+            Margin="0,5,0,0"
             HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            FontSize="25"
+            Text="Registered user/Admin"
+            TextWrapping="Wrap" />
+
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="163,52,0,0"
+            HorizontalAlignment="Left"
             VerticalAlignment="Top"
             RenderTransformOrigin="0.271,-0.482"
             Text="Enter Username" />
+
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="120"
+            Margin="143,76,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+            TextWrapping="Wrap" />
         <TextBlock
             Grid.Row="2"
             Grid.Column="1"
@@ -125,16 +116,24 @@
             VerticalAlignment="Top"
             RenderTransformOrigin="0.271,-0.482"
             Text="Enter Password" />
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Width="120"
+            Margin="143,31,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+            TextWrapping="Wrap" />
+
         <Button
             Grid.Row="2"
             Grid.Column="1"
             Margin="240,79,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Command="{Binding LogInExistingUserCommand}"
+            Command="{Binding LogInCommand}"
             Content="Log in existing user"
             FontSize="15" />
-
-
     </Grid>
 </UserControl>
