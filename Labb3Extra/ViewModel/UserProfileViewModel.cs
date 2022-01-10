@@ -3,7 +3,6 @@ using Labb3Extra.Model;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using MongoDB.Driver;
-using System;
 using System.Collections.ObjectModel;
 
 namespace Labb3Extra.ViewModel
@@ -13,6 +12,7 @@ namespace Labb3Extra.ViewModel
         private readonly NavigationManager _navigationManager;
         private readonly UserManager _userManager;
         private Store _store = new();
+       
         private readonly Managers.MongoDB _db = new("Store");
         private IMongoDatabase _database;
 
@@ -29,13 +29,18 @@ namespace Labb3Extra.ViewModel
 
             StartViewCommand = new RelayCommand(() => GoToStartView());
             ShopViewCommand = new RelayCommand(() => GoToShopView());
+            CheckOutCommand = new RelayCommand(() => CheckOut());
+            SeeSumCommand = new RelayCommand(() => SumCount());
+
+            LoadActiveUserCart();
+            LoadProducts();
+            
         }
 
         public RelayCommand StartViewCommand { get; }
         public RelayCommand ShopViewCommand { get; }
         public RelayCommand CheckOutCommand { get; }
-        //Relay commands
-        //Startview,shopview and exit view
+        public RelayCommand SeeSumCommand { get; }
 
         public void GoToStartView()
         {
@@ -52,10 +57,6 @@ namespace Labb3Extra.ViewModel
             await _store.CheckOutUser(_userManager.ActiveUser);
         }
 
-        //Kunstruktor
-
-        //Propertys
-        //Activeuser and product,selected produkt
         private User _activeUser;
 
         public User ActiveUser
@@ -64,32 +65,58 @@ namespace Labb3Extra.ViewModel
             set => SetProperty(ref _activeUser, value);
         }
 
-        private Product _selectedProduct;
-
-        public Product SelectedProduct
+        private Product _product;
+        public Product ChosenProduct
         {
-            get { return _selectedProduct; }
-            set { _selectedProduct = value; }
+            get => _product;
+            set
+            {
+                if (_product != value)
+                {
+                    _product = value;
+                    OnPropertyChanged(nameof(ChosenProduct));
+                }
+            }
         }
 
-        private Double _sum;
+        private string _priceTotal;
 
-        public Double Sum
+        public string PriceTotal
         {
-            get { return _sum; }
-            set { _sum = value; }
+            get => _priceTotal;
+            set => SetProperty(ref _priceTotal, value);
+        }
+
+        public string SumCount()
+        {
+            double sum = 0;
+            foreach (var product in ActiveUserCart)
+            {
+                 sum += product.Count * product.Price;
+            }
+            PriceTotal = $"{sum} US dollars";
+            return PriceTotal;
         }
 
         public void LoadActiveUserCart()
         {
+            foreach (var product in _userManager.ActiveUser.Cart)
+            {
+                ActiveUserCart.Add(product);
+            }
         }
 
-        public void LoadProdcuts()
+        public void LoadProducts()
         {
+            var db = new MongoClient();
+            _database = db.GetDatabase("Store");
+            var productCollection = _database.GetCollection<Product>("Products").AsQueryable().ToList();
+
+            foreach (var product in productCollection)
+            {
+                Products.Add(product);
+            }
         }
 
-        public void SumCount()
-        {
-        }
     }
 }

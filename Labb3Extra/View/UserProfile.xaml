@@ -22,27 +22,6 @@
             <RowDefinition />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <Image
-            Grid.Row="1"
-            Grid.Column="2"
-            Margin="0,0,255,2"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Source="\Images\Steak.jpg" />
-        <Image
-            Grid.Row="2"
-            Grid.Column="2"
-            Height="175"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            Source="\Images\Salad.jpg" />
-        <Image
-            Grid.Row="1"
-            Grid.Column="2"
-            Margin="248,0,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            Source="\Images\Blue Marlin.jpg" />
 
         <StackPanel
             Grid.Row="1"
@@ -57,13 +36,17 @@
             <TextBox
                 Width="100"
                 FontSize="14"
-                Text="{Binding TotalSum, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding PriceTotal, UpdateSourceTrigger=PropertyChanged}" />
             <Button
                 Width="70"
                 Margin="0,0,10,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Content="Check out" />
+            <Button
+                Width="70"
+                Content="See sum"
+                Command="{Binding SeeSumCommand,UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <Button
             Grid.Column="1"
@@ -78,7 +61,10 @@
                 Height="200"
                 Background="AliceBlue"
                 FontSize="12"
-                ItemsSource="{Binding ActiveUserCart, UpdateSourceTrigger=PropertyChanged}">
+                ItemsSource="{Binding ActiveUserCart, UpdateSourceTrigger=PropertyChanged}"
+                SelectedItem="{Binding ChosenProduct, UpdateSourceTrigger=PropertyChanged}"
+                
+                >
                 <ListView.View>
                     <GridView AllowsColumnReorder="True">
                         <GridView.Columns>
@@ -92,11 +78,11 @@
                                 Header="Type Of Product" />
                             <GridViewColumn
                                 Width="100"
-                                DisplayMemberBinding="{Binding PricePerProduct}"
+                                DisplayMemberBinding="{Binding Price}"
                                 Header="Price per product" />
                             <GridViewColumn
                                 Width="Auto"
-                                DisplayMemberBinding="{Binding AmountOfProducts}"
+                                DisplayMemberBinding="{Binding Count}"
                                 Header="Amount " />
                         </GridView.Columns>
                     </GridView>

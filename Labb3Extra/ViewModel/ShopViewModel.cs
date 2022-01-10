@@ -1,44 +1,115 @@
 ﻿using Labb3Extra.Managers;
+using Labb3Extra.Model;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
+using MongoDB.Driver;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 
 namespace Labb3Extra.ViewModel
 {
     internal class ShopViewModel : ObservableObject
     {
+        //ToDO
+        //Börja med shopviewmodel
         private NavigationManager _navigationManager;
+
         private UserManager _userManager = new();
 
-        //Lista Av produkter,Lista av olika produkttyp,
-        //Lista av produkter som active user har valt
+        public ObservableCollection<Product> Products { get; set; } = new();
 
-        //Navigation manager och usermanger
+        //public ObservableCollection<string> ProductType { get; set; } = new();
+        public ObservableCollection<Product> ActiveUserCart { get; set; } = new();
 
-        //Två relay commands
-        //Lägg till i kundvagnen
-        //Gå till userprofilevyn
+        private readonly Managers.MongoDB _db = new("Store");
+
+        private Product _product;
+        private IMongoDatabase _database;
+
+        public RelayCommand AddToCartCommand { get; }
+        public RelayCommand GoToUserProfileCommand { get; }
 
         //Kunstruktor
         public ShopViewModel(NavigationManager navigationManager, UserManager userManager)
         {
             _navigationManager = navigationManager;
             _userManager = userManager;
+            ActiveUserCart = _userManager.ActiveUser.Cart;
+            GoToUserProfileCommand = new RelayCommand(() => GoToUserProfile());
+            AddToCartCommand = new RelayCommand(() => AddProdToCart());
+            LoadProducts();
         }
 
-        //Propertys
-        //Isfalse
-        //Amount
-        //An observablecollection of the items
-        //chosen producttype
-        //chosenproduct
+        public void GoToUserProfile()
+        {
+            _navigationManager.CurrentViewModel = new UserProfileViewModel(_navigationManager, _userManager);
+        }
 
-        //Methods
-        //AddProduct to cart
+        private int _count;
+
+        public int Count
+        {
+            get => _count;
+            set => SetProperty(ref _count, value);
+        }
+
+        private Product _chosenProduct;
+
+        public Product ChosenProduct
+        {
+            get => _product;
+            set
+            {
+                if (_product != value)
+                {
+                    _product = value;
+                    OnPropertyChanged(nameof(ChosenProduct));
+                }
+            }
+        }
         public void AddProdToCart()
         {
+            //if (Count == 0 || ChosenProduct == null)
+            //{
+            //    MessageBox.Show("Please choose an amount you would like to add to your cart", "Error", MessageBoxButton.OK);
+            //}
+
+            var productCollection = ActiveUserCart.FirstOrDefault(p => p.Id == ChosenProduct.Id);
+         
+            if (productCollection != null)
+            {
+                MessageBox.Show($"You have added {Count} {ChosenProduct} to your cart");
+                _userManager.ActiveUser.Cart  = ActiveUserCart;
+                productCollection.Count += Count;
+                _product.Count -= Count;
+                _db.UpsertRecord("Users", _userManager.ActiveUser);
+                _db.UpsertProduct("Products", ChosenProduct);
+                Count = 0;
+                return;
+            }
+
+            var productCopy = ChosenProduct.Copy();
+            productCopy.Count = Count;
+            ActiveUserCart.Add(productCopy);
+            _product.Count -= Count;
+            MessageBox.Show($"You have added {Count} {ChosenProduct} to your cart");
+            _userManager.ActiveUser.Cart = ActiveUserCart;
+            _db.UpsertRecord("Users", _userManager.ActiveUser);
+            _db.UpsertProduct("Products", ChosenProduct);
+            Count = 0;
         }
 
-        //LoadProducts into the list
+        public void LoadProducts()
+        {
+            var db = new MongoClient();
+            _database = db.GetDatabase("Store");
+            var collection = _database.GetCollection<Product>("Products").AsQueryable().ToList();
 
-        //Getthe differnt product types
+            foreach (var product in collection)
+            {
+                Products.Add(product);
+            }
+        }
     }
 }

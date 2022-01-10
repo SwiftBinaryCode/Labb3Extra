@@ -53,8 +53,15 @@ namespace Labb3Extra.ViewModel
 
         public Product ChosenProduct
         {
-            get => _chosenProduct;
-            set => SetProperty(ref _chosenProduct, value);
+            get => _product;
+            set
+            {
+                if (_product != value)
+                {
+                    _product = value;
+                    OnPropertyChanged(nameof(ChosenProduct));
+                }
+            }
         }
 
         private int _price;
@@ -89,8 +96,8 @@ namespace Labb3Extra.ViewModel
 
         public string Image
         {
-            get { return _image; }
-            set { _image = value; }
+            get => _image;
+            set => SetProperty(ref _image, value);
         }
 
         //listof items,chodenproducttype
@@ -102,9 +109,9 @@ namespace Labb3Extra.ViewModel
             _database = db.GetDatabase("Store");
             var collection = _database.GetCollection<Product>("Products").AsQueryable().ToList();
 
-            foreach (var item in collection)
+            foreach (var product in collection)
             {
-                Products.Add(item);
+                Products.Add(product);
             }
         }
 

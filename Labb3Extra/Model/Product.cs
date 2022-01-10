@@ -30,5 +30,17 @@ namespace Labb3Extra.Model
         {
             return $"{NameOfProduct}";
         }
+
+        public Product Copy()
+        {
+            var productCopy = new Product();
+            productCopy.Id = Id;
+            productCopy.NameOfProduct = NameOfProduct;
+            productCopy.TypeOfProduct = TypeOfProduct;
+            productCopy.Price = Price;
+            productCopy.Count = 0;
+            productCopy.Image = Image;
+            return productCopy;
+        }
     }
 }
