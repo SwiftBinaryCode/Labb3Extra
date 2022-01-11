@@ -100,8 +100,6 @@ namespace Labb3Extra.ViewModel
             set => SetProperty(ref _image, value);
         }
 
-        //listof items,chodenproducttype
-
         //methods
         public void LoadProdDatabase()
         {
@@ -118,7 +116,7 @@ namespace Labb3Extra.ViewModel
         //AddProdcuts
         public void AddProdToDatabase()
         {
-            _db.InsertNew("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count });
+            _db.InsertNew("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count,TypeOfProduct=TypeOfProduct,Image =Image });
             MessageBox.Show("Product Added", "Added", MessageBoxButton.OK);
             Products.Clear();
             LoadProdDatabase();
@@ -134,22 +132,14 @@ namespace Labb3Extra.ViewModel
             Image = null;
         }
 
-        //public void GetTypeOfProdfromDatabase()
-        //{
-        //    var db = new MongoClient();
-        //    _database = db.GetDatabase("Store");
-        //    var collection = _database.GetCollection<Product>("Produkter");
+        public void GetTypeOfProdfromDatabase()
+        {
+            var db = new MongoClient();
+            _database = db.GetDatabase("Store");
+            var collection = _database.GetCollection<Product>("Produkter");
 
-        //    var typesofprod = collection.AsQueryable().Select(p => p.TypeOfProduct).Distinct();
 
-        //    foreach (var item in typesofprod)
-        //    {
-        //        TypesOfProducts.Add(item);
-        //    }
-
-        //}
-
-        //Get the different product types
+        }
         //Load Prodcuts types
         //Product filter
     }

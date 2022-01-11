@@ -54,8 +54,14 @@ namespace Labb3Extra.ViewModel
             set => SetProperty(ref _count, value);
         }
 
-        private Product _chosenProduct;
 
+        private string _image;
+
+        public string Image
+        {
+            get => _image;
+            set => SetProperty(ref _image, value);
+        }
         public Product ChosenProduct
         {
             get => _product;
@@ -70,24 +76,24 @@ namespace Labb3Extra.ViewModel
         }
         public void AddProdToCart()
         {
-            //if (Count == 0 || ChosenProduct == null)
-            //{
-            //    MessageBox.Show("Please choose an amount you would like to add to your cart", "Error", MessageBoxButton.OK);
-            //}
-
-            var productCollection = ActiveUserCart.FirstOrDefault(p => p.Id == ChosenProduct.Id);
-         
-            if (productCollection != null)
+            if (Count == 0 || ChosenProduct == null)
             {
-                MessageBox.Show($"You have added {Count} {ChosenProduct} to your cart");
-                _userManager.ActiveUser.Cart  = ActiveUserCart;
-                productCollection.Count += Count;
-                _product.Count -= Count;
-                _db.UpsertRecord("Users", _userManager.ActiveUser);
-                _db.UpsertProduct("Products", ChosenProduct);
-                Count = 0;
-                return;
+                MessageBox.Show("Please choose an amount you would like to add to your cart", "Error", MessageBoxButton.OK);
             }
+
+            //var productCollection = ActiveUserCart.FirstOrDefault(p => p.Id == ChosenProduct.Id);
+
+            //if (productCollection != null)
+            //{
+            //    MessageBox.Show($"You have added {Count} {ChosenProduct} to your cart");
+            //    _userManager.ActiveUser.Cart = ActiveUserCart;
+            //    productCollection.Count += Count;
+            //    _product.Count -= Count;
+            //    _db.UpsertRecord("Users", _userManager.ActiveUser);
+            //    _db.UpsertProduct("Products", ChosenProduct);
+            //    Count = 0;
+            //    return;
+            //}
 
             var productCopy = ChosenProduct.Copy();
             productCopy.Count = Count;
