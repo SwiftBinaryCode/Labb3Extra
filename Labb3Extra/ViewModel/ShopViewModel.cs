@@ -15,12 +15,13 @@ namespace Labb3Extra.ViewModel
         //ToDO
         //Börja med shopviewmodel
         private NavigationManager _navigationManager;
-
         private UserManager _userManager = new();
 
         public ObservableCollection<Product> Products { get; set; } = new();
 
-        public ObservableCollection<string> ProductType { get; set; } = new();
+        public ObservableCollection<string> TypeOfProducts { get; set; } = new();
+
+        public ObservableCollection<Product> FilteredProducts { get; set; }
         public ObservableCollection<Product> ActiveUserCart { get; set; } = new();
 
         private readonly Managers.MongoDB _db = new("Store");
@@ -29,6 +30,7 @@ namespace Labb3Extra.ViewModel
         private IMongoDatabase _database;
 
         public RelayCommand AddToCartCommand { get; }
+        public RelayCommand ResetListCommand { get; }
         public RelayCommand GoToUserProfileCommand { get; }
 
         //Kunstruktor
@@ -37,9 +39,13 @@ namespace Labb3Extra.ViewModel
             _navigationManager = navigationManager;
             _userManager = userManager;
             ActiveUserCart = _userManager.ActiveUser.Cart;
+            ResetListCommand = new RelayCommand(() => Resetproducts());
             GoToUserProfileCommand = new RelayCommand(() => GoToUserProfile());
             AddToCartCommand = new RelayCommand(() => AddProdToCart());
+            FilteredProducts = Products;
             LoadProducts();
+            GetTypeOfProdfromDatabase();
+
         }
 
         public void GoToUserProfile()
@@ -76,6 +82,12 @@ namespace Labb3Extra.ViewModel
                 }
             }
         }
+        private string _typeOfProduct;
+
+        public string TypeOfProduct
+        {
+            get => _typeOfProduct; set => SetProperty(ref _typeOfProduct, value);
+        }
 
         private string _chosenProductType;
         public string ChosenProductType
@@ -83,12 +95,24 @@ namespace Labb3Extra.ViewModel
             get => _chosenProductType;
             set
             {
+                SetProperty(ref _chosenProductType, value);
+                FilterProductList();
+                OnPropertyChanged(nameof(FilteredProducts));
 
-                _chosenProductType = value;
-                OnPropertyChanged();
-                
             }
         }
+        //restet filter products
+        public void Resetproducts()
+        {
+            FilteredProducts = Products;
+            OnPropertyChanged(nameof(FilteredProducts));
+
+        }
+        private void FilterProductList()
+        {
+            FilteredProducts = new(Products.Where(p => p.TypeOfProduct == _chosenProductType));
+        }
+
 
         public void AddProdToCart()
         {
@@ -121,7 +145,20 @@ namespace Labb3Extra.ViewModel
                 Products.Add(product);
             }
         }
+        public void GetTypeOfProdfromDatabase()
+        {
+            var db = new MongoClient();
+            _database = db.GetDatabase("Store");
+            var collection = _database.GetCollection<Product>("Products");
+            var typeofprod = collection.AsQueryable().Select(p => p.TypeOfProduct).Distinct();
 
-     
+            foreach (var items in typeofprod)
+            {
+                TypeOfProducts.Add(items);
+            }
+
+        }
+
+
     }
 }

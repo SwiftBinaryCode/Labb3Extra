@@ -24,6 +24,7 @@ namespace Labb3Extra.ViewModel
 
         public RelayCommand StartViewCommand { get; }
         public RelayCommand AddProductCommand { get; }
+        public RelayCommand ResetListCommand { get; }
 
         //Constructor
         public AdminViewModel(NavigationManager navigationManager, UserManager userManager)
@@ -32,6 +33,7 @@ namespace Labb3Extra.ViewModel
             _userManager = userManager;
             StartViewCommand = new RelayCommand(GoToStartView);
             AddProductCommand = new RelayCommand(AddProdToDatabase);
+            ResetListCommand = new RelayCommand(Resetproducts);
             LoadProdDatabase();
             FilteredProducts = Products;
             GetTypeOfProdfromDatabase();
@@ -63,6 +65,7 @@ namespace Labb3Extra.ViewModel
                 {
                     _product = value;
                     OnPropertyChanged(nameof(ChosenProduct));
+                    Image = _product.Image;
                 }
             }
         }
