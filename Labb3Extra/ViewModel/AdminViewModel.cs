@@ -4,8 +4,10 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using MongoDB.Driver;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 
 namespace Labb3Extra.ViewModel
 {
@@ -16,8 +18,9 @@ namespace Labb3Extra.ViewModel
         private IMongoDatabase _database;
         private Product _product;
         private readonly Managers.MongoDB _db = new("Store");
-        public ObservableCollection<string> TypesOfProducts { get; set; } = new();
+        public ObservableCollection<string> TypeOfProducts { get; set; } = new();
         public ObservableCollection<Product> Products { get; set; } = new();
+        public ObservableCollection<Product> FilteredProducts { get; set; }
 
         public RelayCommand StartViewCommand { get; }
         public RelayCommand AddProductCommand { get; }
@@ -30,6 +33,8 @@ namespace Labb3Extra.ViewModel
             StartViewCommand = new RelayCommand(GoToStartView);
             AddProductCommand = new RelayCommand(AddProdToDatabase);
             LoadProdDatabase();
+            FilteredProducts = Products;
+            GetTypeOfProdfromDatabase();
             ActiveUser = _userManager.ActiveUser;
         }
 
@@ -48,8 +53,6 @@ namespace Labb3Extra.ViewModel
         {
             get => _nameOfProduct; set => SetProperty(ref _nameOfProduct, value);
         }
-
-        private Product _chosenProduct;
 
         public Product ChosenProduct
         {
@@ -76,13 +79,30 @@ namespace Labb3Extra.ViewModel
         public string TypeOfProduct
         {
             get => _typeOfProduct; set => SetProperty(ref _typeOfProduct, value);
-        }
+        } 
 
         private string _chosenProductType;
-
         public string ChosenProductType
         {
-            get => _chosenProductType; set => SetProperty(ref _chosenProductType, value);
+            get => _chosenProductType;
+            set
+            {
+                SetProperty(ref _chosenProductType, value);
+                FilterProductList();
+                OnPropertyChanged(nameof(FilteredProducts));
+
+            }
+        }
+        //restet filter products
+        public void Resetproducts()
+        {
+            FilteredProducts = Products;
+            OnPropertyChanged(nameof(FilteredProducts));
+
+        }
+        private void FilterProductList()
+        {
+            FilteredProducts = new (Products.Where(p => p.TypeOfProduct == _chosenProductType));
         }
 
         private int _count;
@@ -116,7 +136,7 @@ namespace Labb3Extra.ViewModel
         //AddProdcuts
         public void AddProdToDatabase()
         {
-            _db.InsertNew("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count,TypeOfProduct=TypeOfProduct,Image =Image });
+            _db.InsertNew("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count, TypeOfProduct = TypeOfProduct, Image = Image });
             MessageBox.Show("Product Added", "Added", MessageBoxButton.OK);
             Products.Clear();
             LoadProdDatabase();
@@ -136,11 +156,15 @@ namespace Labb3Extra.ViewModel
         {
             var db = new MongoClient();
             _database = db.GetDatabase("Store");
-            var collection = _database.GetCollection<Product>("Produkter");
+            var collection = _database.GetCollection<Product>("Products");
+            var typeofprod = collection.AsQueryable().Select(p => p.TypeOfProduct).Distinct();
 
+            foreach (var items in typeofprod)
+            {
+                TypeOfProducts.Add(items);
+            }
 
         }
-        //Load Prodcuts types
-        //Product filter
+
     }
 }

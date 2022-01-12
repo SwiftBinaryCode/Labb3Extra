@@ -12,7 +12,7 @@ namespace Labb3Extra.ViewModel
         private readonly NavigationManager _navigationManager;
         private readonly UserManager _userManager;
         private Store _store = new();
-       
+
         private readonly Managers.MongoDB _db = new("Store");
         private IMongoDatabase _database;
 
@@ -31,10 +31,8 @@ namespace Labb3Extra.ViewModel
             ShopViewCommand = new RelayCommand(() => GoToShopView());
             CheckOutCommand = new RelayCommand(() => CheckOut());
             SeeSumCommand = new RelayCommand(() => SumCount());
-
             LoadActiveUserCart();
             LoadProducts();
-            
         }
 
         public RelayCommand StartViewCommand { get; }
@@ -52,9 +50,9 @@ namespace Labb3Extra.ViewModel
             _navigationManager.CurrentViewModel = new ShopViewModel(_navigationManager, _userManager);
         }
 
-        public async void CheckOut()
+        public void CheckOut()
         {
-            await _store.CheckOutUser(_userManager.ActiveUser);
+            _store.CheckOutUser(_userManager.ActiveUser);
         }
 
         private User _activeUser;
@@ -66,6 +64,7 @@ namespace Labb3Extra.ViewModel
         }
 
         private Product _product;
+
         public Product ChosenProduct
         {
             get => _product;
@@ -92,7 +91,7 @@ namespace Labb3Extra.ViewModel
             double sum = 0;
             foreach (var product in ActiveUserCart)
             {
-                 sum += product.Count * product.Price;
+                sum += product.Count * product.Price;
             }
             PriceTotal = $"{sum} US dollars";
             return PriceTotal;
@@ -117,6 +116,5 @@ namespace Labb3Extra.ViewModel
                 Products.Add(product);
             }
         }
-
     }
 }

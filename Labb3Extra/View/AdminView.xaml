@@ -121,7 +121,7 @@
             Width="100"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            ItemsSource="{Binding TypesOfProducts, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{Binding TypeOfProducts, UpdateSourceTrigger=PropertyChanged}"
             SelectedItem="{Binding ChosenProductType, UpdateSourceTrigger=PropertyChanged}" />
 
         <ListView
@@ -129,7 +129,7 @@
             Grid.Column="2"
             Width="250"
             Height="150"
-            ItemsSource="{Binding Products, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{Binding FilteredProducts, UpdateSourceTrigger=PropertyChanged}"
             SelectedItem="{Binding ChosenProduct, UpdateSourceTrigger=PropertyChanged}">
             <ListView.View>
                 <GridView AllowsColumnReorder="True">

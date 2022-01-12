@@ -3,6 +3,7 @@ using Labb3Extra.Model;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using MongoDB.Driver;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -19,7 +20,7 @@ namespace Labb3Extra.ViewModel
 
         public ObservableCollection<Product> Products { get; set; } = new();
 
-        //public ObservableCollection<string> ProductType { get; set; } = new();
+        public ObservableCollection<string> ProductType { get; set; } = new();
         public ObservableCollection<Product> ActiveUserCart { get; set; } = new();
 
         private readonly Managers.MongoDB _db = new("Store");
@@ -54,7 +55,6 @@ namespace Labb3Extra.ViewModel
             set => SetProperty(ref _count, value);
         }
 
-
         private string _image;
 
         public string Image
@@ -62,6 +62,7 @@ namespace Labb3Extra.ViewModel
             get => _image;
             set => SetProperty(ref _image, value);
         }
+
         public Product ChosenProduct
         {
             get => _product;
@@ -71,29 +72,31 @@ namespace Labb3Extra.ViewModel
                 {
                     _product = value;
                     OnPropertyChanged(nameof(ChosenProduct));
+                    Image = _product.Image;
                 }
             }
         }
+
+        private string _chosenProductType;
+        public string ChosenProductType
+        {
+            get => _chosenProductType;
+            set
+            {
+
+                _chosenProductType = value;
+                OnPropertyChanged();
+                
+            }
+        }
+
         public void AddProdToCart()
         {
             if (Count == 0 || ChosenProduct == null)
             {
                 MessageBox.Show("Please choose an amount you would like to add to your cart", "Error", MessageBoxButton.OK);
             }
-
-            //var productCollection = ActiveUserCart.FirstOrDefault(p => p.Id == ChosenProduct.Id);
-
-            //if (productCollection != null)
-            //{
-            //    MessageBox.Show($"You have added {Count} {ChosenProduct} to your cart");
-            //    _userManager.ActiveUser.Cart = ActiveUserCart;
-            //    productCollection.Count += Count;
-            //    _product.Count -= Count;
-            //    _db.UpsertRecord("Users", _userManager.ActiveUser);
-            //    _db.UpsertProduct("Products", ChosenProduct);
-            //    Count = 0;
-            //    return;
-            //}
+           
 
             var productCopy = ChosenProduct.Copy();
             productCopy.Count = Count;
@@ -104,6 +107,7 @@ namespace Labb3Extra.ViewModel
             _db.UpsertRecord("Users", _userManager.ActiveUser);
             _db.UpsertProduct("Products", ChosenProduct);
             Count = 0;
+
         }
 
         public void LoadProducts()
@@ -117,5 +121,7 @@ namespace Labb3Extra.ViewModel
                 Products.Add(product);
             }
         }
+
+     
     }
 }
