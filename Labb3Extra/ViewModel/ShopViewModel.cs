@@ -68,6 +68,7 @@ namespace Labb3Extra.ViewModel
             get => _product;
             set
             {
+                SetProperty(ref _product, value);
                 if (_product != value)
                 { 
                     _product = value;
@@ -94,6 +95,9 @@ namespace Labb3Extra.ViewModel
                 SetProperty(ref _chosenProductType, value);
                 FilterProductList();
                 OnPropertyChanged(nameof(FilteredProducts));
+                OnPropertyChanged(nameof(_product));
+
+              
             }
         }
 
@@ -126,6 +130,7 @@ namespace Labb3Extra.ViewModel
                 _db.UpsertRecord("Users", _userManager.ActiveUser);
                 _db.UpsertProduct("Products", ChosenProduct);
                 Count = 0;
+               
 
                 return;
             }
@@ -138,7 +143,8 @@ namespace Labb3Extra.ViewModel
             _userManager.ActiveUser.Cart = ActiveUserCart;
             _db.UpsertRecord("Users", _userManager.ActiveUser);
             _db.UpsertProduct("Products", ChosenProduct);
-            Count = 0; 
+            Count = 0;
+            
         }
 
         public void LoadProdDatabase()
