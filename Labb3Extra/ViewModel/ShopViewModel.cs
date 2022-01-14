@@ -39,7 +39,7 @@ namespace Labb3Extra.ViewModel
             FilteredProducts = Products;
             LoadProdDatabase();
             GetTypeOfProdfromDatabase();
-            
+
         }
 
         public void GoToUserProfile()
@@ -63,20 +63,27 @@ namespace Labb3Extra.ViewModel
             set => SetProperty(ref _image, value);
         }
 
+
+
+
+
         public Product ChosenProduct
         {
             get => _product;
             set
             {
-                SetProperty(ref _product, value);
+
                 if (_product != value)
-                { 
-                    _product = value;
-                    OnPropertyChanged(nameof(ChosenProduct));                  
-                    Image = _product.Image; 
+                {
+                    _product = value ?? new Product();
+                    OnPropertyChanged(nameof(ChosenProduct));
+                    Image = _product.Image;
                 }
+
             }
         }
+
+
 
         private string _typeOfProduct;
 
@@ -95,9 +102,9 @@ namespace Labb3Extra.ViewModel
                 SetProperty(ref _chosenProductType, value);
                 FilterProductList();
                 OnPropertyChanged(nameof(FilteredProducts));
-                OnPropertyChanged(nameof(_product));
 
-              
+
+
             }
         }
 
@@ -130,7 +137,7 @@ namespace Labb3Extra.ViewModel
                 _db.UpsertRecord("Users", _userManager.ActiveUser);
                 _db.UpsertProduct("Products", ChosenProduct);
                 Count = 0;
-               
+
 
                 return;
             }
@@ -144,7 +151,7 @@ namespace Labb3Extra.ViewModel
             _db.UpsertRecord("Users", _userManager.ActiveUser);
             _db.UpsertProduct("Products", ChosenProduct);
             Count = 0;
-            
+
         }
 
         public void LoadProdDatabase()
@@ -172,6 +179,6 @@ namespace Labb3Extra.ViewModel
             }
         }
 
-      
+
     }
 }
