@@ -10,16 +10,11 @@ namespace Labb3Extra.ViewModel
 {
     internal class StartViewModel : ObservableObject
     {
-        //propertys  för att navigera och få activeuser
         private readonly NavigationManager _navigationManager;
-
         private readonly UserManager _userManager;
         private readonly IMongoDatabase _database;
         private readonly Managers.MongoDB _db = new("Store");
-
-        //RelayCommands
         public RelayCommand AddUserCommand { get; }
-
         public RelayCommand LogInCommand
 
         {
@@ -116,10 +111,8 @@ namespace Labb3Extra.ViewModel
 
         public void CheckRegisteredUsers(User activeUser)
         {
-            //Get collection of users from database
             var collection = _database.GetCollection<User>("Users");
             bool foundUser = collection.Find(s => s.Username == Username).Any();
-            //Check if any of the usernames exist
             if (foundUser)
             {
                 ActiveUser = collection.Find(s => s.Username == Username).Single();
@@ -142,7 +135,6 @@ namespace Labb3Extra.ViewModel
 
         public void AdminLogIn()
         {
-            //Get the collection of admin users from the database
             var Admincollection = _database.GetCollection<User>("Admin");
             bool adminFound = Admincollection.Find(a => a.Username == Username).Any();
 
@@ -164,7 +156,7 @@ namespace Labb3Extra.ViewModel
 
             if (!foundUser && !adminFound)
             {
-                MessageBox.Show("Sorry incorrect log in details try again.", "Error", MessageBoxButton.OK);
+                MessageBox.Show("Sorry no log in details found", "Error", MessageBoxButton.OK);
                 EmptyLogIn();
             }
         }

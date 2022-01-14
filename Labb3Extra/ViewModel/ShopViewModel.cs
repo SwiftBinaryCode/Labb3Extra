@@ -3,7 +3,6 @@ using Labb3Extra.Model;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using MongoDB.Driver;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -12,15 +11,10 @@ namespace Labb3Extra.ViewModel
 {
     internal class ShopViewModel : ObservableObject
     {
-        //ToDO
-        //Börja med shopviewmodel
         private NavigationManager _navigationManager;
         private UserManager _userManager = new();
-
         public ObservableCollection<Product> Products { get; set; } = new();
-
         public ObservableCollection<string> TypeOfProducts { get; set; } = new();
-
         public ObservableCollection<Product> FilteredProducts { get; set; }
         public ObservableCollection<Product> ActiveUserCart { get; set; } = new();
 
@@ -43,9 +37,9 @@ namespace Labb3Extra.ViewModel
             GoToUserProfileCommand = new RelayCommand(() => GoToUserProfile());
             AddToCartCommand = new RelayCommand(() => AddProdToCart());
             FilteredProducts = Products;
-            LoadProducts();
+            LoadProdDatabase();
             GetTypeOfProdfromDatabase();
-
+            
         }
 
         public void GoToUserProfile()
@@ -75,13 +69,14 @@ namespace Labb3Extra.ViewModel
             set
             {
                 if (_product != value)
-                {
+                { 
                     _product = value;
-                    OnPropertyChanged(nameof(ChosenProduct));
-                    Image = _product.Image;
+                    OnPropertyChanged(nameof(ChosenProduct));                  
+                    Image = _product.Image; 
                 }
             }
         }
+
         private string _typeOfProduct;
 
         public string TypeOfProduct
@@ -90,6 +85,7 @@ namespace Labb3Extra.ViewModel
         }
 
         private string _chosenProductType;
+
         public string ChosenProductType
         {
             get => _chosenProductType;
@@ -98,21 +94,19 @@ namespace Labb3Extra.ViewModel
                 SetProperty(ref _chosenProductType, value);
                 FilterProductList();
                 OnPropertyChanged(nameof(FilteredProducts));
-
             }
         }
-        //restet filter products
+
         public void Resetproducts()
         {
             FilteredProducts = Products;
             OnPropertyChanged(nameof(FilteredProducts));
-
         }
+
         private void FilterProductList()
         {
             FilteredProducts = new(Products.Where(p => p.TypeOfProduct == _chosenProductType));
         }
-
 
         public void AddProdToCart()
         {
@@ -120,7 +114,21 @@ namespace Labb3Extra.ViewModel
             {
                 MessageBox.Show("Please choose an amount you would like to add to your cart", "Error", MessageBoxButton.OK);
             }
-           
+
+            var ProductsFound = ActiveUserCart.FirstOrDefault(p => p.Id == ChosenProduct.Id);
+
+            if (ProductsFound != null)
+            {
+                MessageBox.Show($"You have added {Count} {ChosenProduct} to your cart");
+                _userManager.ActiveUser.Cart = ActiveUserCart;
+                ProductsFound.Count += Count;
+                _product.Count -= Count;
+                _db.UpsertRecord("Users", _userManager.ActiveUser);
+                _db.UpsertProduct("Products", ChosenProduct);
+                Count = 0;
+
+                return;
+            }
 
             var productCopy = ChosenProduct.Copy();
             productCopy.Count = Count;
@@ -130,11 +138,10 @@ namespace Labb3Extra.ViewModel
             _userManager.ActiveUser.Cart = ActiveUserCart;
             _db.UpsertRecord("Users", _userManager.ActiveUser);
             _db.UpsertProduct("Products", ChosenProduct);
-            Count = 0;
-
+            Count = 0; 
         }
 
-        public void LoadProducts()
+        public void LoadProdDatabase()
         {
             var db = new MongoClient();
             _database = db.GetDatabase("Store");
@@ -145,6 +152,7 @@ namespace Labb3Extra.ViewModel
                 Products.Add(product);
             }
         }
+
         public void GetTypeOfProdfromDatabase()
         {
             var db = new MongoClient();
@@ -156,9 +164,8 @@ namespace Labb3Extra.ViewModel
             {
                 TypeOfProducts.Add(items);
             }
-
         }
 
-
+      
     }
 }

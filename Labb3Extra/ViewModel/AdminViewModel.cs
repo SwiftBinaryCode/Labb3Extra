@@ -4,10 +4,8 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using MongoDB.Driver;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Data;
 
 namespace Labb3Extra.ViewModel
 {
@@ -82,9 +80,10 @@ namespace Labb3Extra.ViewModel
         public string TypeOfProduct
         {
             get => _typeOfProduct; set => SetProperty(ref _typeOfProduct, value);
-        } 
+        }
 
         private string _chosenProductType;
+
         public string ChosenProductType
         {
             get => _chosenProductType;
@@ -93,19 +92,19 @@ namespace Labb3Extra.ViewModel
                 SetProperty(ref _chosenProductType, value);
                 FilterProductList();
                 OnPropertyChanged(nameof(FilteredProducts));
-
             }
         }
+
         //restet filter products
         public void Resetproducts()
         {
             FilteredProducts = Products;
             OnPropertyChanged(nameof(FilteredProducts));
-
         }
+
         private void FilterProductList()
         {
-            FilteredProducts = new (Products.Where(p => p.TypeOfProduct == _chosenProductType));
+            FilteredProducts = new(Products.Where(p => p.TypeOfProduct == _chosenProductType));
         }
 
         private int _count;
@@ -166,8 +165,6 @@ namespace Labb3Extra.ViewModel
             {
                 TypeOfProducts.Add(items);
             }
-
         }
-
     }
 }

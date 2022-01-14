@@ -4,6 +4,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using MongoDB.Driver;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Labb3Extra.ViewModel
 {
@@ -15,11 +16,12 @@ namespace Labb3Extra.ViewModel
 
         private readonly Managers.MongoDB _db = new("Store");
         private IMongoDatabase _database;
-
-        //List of the users chosen products
         public ObservableCollection<Product> Products { get; set; } = new();
 
         public ObservableCollection<Product> ActiveUserCart { get; set; } = new();
+
+        public ObservableCollection<string> TypeOfProducts { get; set; } = new();
+        public ObservableCollection<Product> FilteredProducts { get; set; }
 
         public UserProfileViewModel(NavigationManager navigationManager, UserManager userManager)
         {
@@ -32,13 +34,15 @@ namespace Labb3Extra.ViewModel
             CheckOutCommand = new RelayCommand(() => CheckOut());
             SeeSumCommand = new RelayCommand(() => SumCount());
             LoadActiveUserCart();
-            LoadProducts();
+            Loadproddatabase();
+            
         }
 
         public RelayCommand StartViewCommand { get; }
         public RelayCommand ShopViewCommand { get; }
         public RelayCommand CheckOutCommand { get; }
         public RelayCommand SeeSumCommand { get; }
+
 
         public void GoToStartView()
         {
@@ -105,7 +109,7 @@ namespace Labb3Extra.ViewModel
             }
         }
 
-        public void LoadProducts()
+        public void Loadproddatabase()
         {
             var db = new MongoClient();
             _database = db.GetDatabase("Store");
@@ -116,5 +120,6 @@ namespace Labb3Extra.ViewModel
                 Products.Add(product);
             }
         }
+
     }
 }
