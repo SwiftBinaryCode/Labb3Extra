@@ -15,7 +15,9 @@ namespace Labb3Extra.Model
 
         public string Image { get; set; }
 
-        public double Price { get; set; }
+        public int Price { get; set; }
+
+        public int PriceTotal { get; set; }
 
         public int Count { get; set; }
 

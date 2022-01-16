@@ -101,12 +101,27 @@
                 Margin="0,219,0,151"
                 HorizontalAlignment="Center"
                 Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox
+                Width="60"
+                Height="20"
+                Margin="310,132,0,238"
+                HorizontalAlignment="Right"
+                Text="{Binding PriceTotal, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Width="60"
+                Height="18"
+                Margin="0,116,0,256"
+                HorizontalAlignment="Right"
+                Text="Total price"
+                TextWrapping="Wrap" />
         </Grid>
 
         <StackPanel
             Grid.Row="1"
             Grid.RowSpan="2"
-            Grid.ColumnSpan="2" />
+            Grid.ColumnSpan="2" >
+
+        </StackPanel>
         <TextBlock
             Grid.Row="1"
             Grid.Column="2"
@@ -126,8 +141,10 @@
         <ListView
             Grid.Row="1"
             Grid.Column="2"
-            Width="250"
+            Width="300"
             Height="150"
+            Margin="5,0,0,0"
+            HorizontalAlignment="Left"
             ItemsSource="{Binding FilteredProducts, UpdateSourceTrigger=PropertyChanged}"
             SelectedItem="{Binding ChosenProduct, UpdateSourceTrigger=PropertyChanged}">
             <ListView.View>
@@ -142,13 +159,17 @@
                             DisplayMemberBinding="{Binding TypeOfProduct}"
                             Header="TypeOfProduct" />
                         <GridViewColumn
-                            Width="Auto"
+                            Width="40"
                             DisplayMemberBinding="{Binding Price}"
-                            Header="Cost" />
+                            Header="Price" />
                         <GridViewColumn
-                            Width="Auto"
+                            Width="60"
                             DisplayMemberBinding="{Binding Count}"
-                            Header="Total" />
+                            Header="Amount" />
+                        <GridViewColumn
+                            Width="60"
+                            DisplayMemberBinding="{Binding PriceTotal}"
+                            Header="Total Price" />
                     </GridView.Columns>
                 </GridView>
             </ListView.View>
@@ -170,6 +191,7 @@
             VerticalAlignment="Top"
             Text="Sort products"
             TextWrapping="Wrap" />
-     
+
+
     </Grid>
 </UserControl>

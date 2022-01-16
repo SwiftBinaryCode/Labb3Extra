@@ -24,6 +24,8 @@ namespace Labb3Extra.ViewModel
         public RelayCommand AddProductCommand { get; }
         public RelayCommand ResetListCommand { get; }
 
+ 
+
 
 
         public AdminViewModel(NavigationManager navigationManager, UserManager userManager)
@@ -33,6 +35,7 @@ namespace Labb3Extra.ViewModel
             StartViewCommand = new RelayCommand(GoToStartView);
             AddProductCommand = new RelayCommand(AddProdToDatabase);
             ResetListCommand = new RelayCommand(Resetproducts);
+            
             LoadProdDatabase();
             FilteredProducts = Products;
             GetTypeOfProdfromDatabase();
@@ -131,18 +134,32 @@ namespace Labb3Extra.ViewModel
             foreach (var product in collection)
             {
                 Products.Add(product);
+
+              
             }
+           
         }
+        private int _priceTotal;
+
+        public int PriceTotal
+        {
+            get => _priceTotal;
+            set => SetProperty(ref _priceTotal, value);
+        }
+
 
         //Lägger till produkter i mongo databasen, och hämtar den nya produkttypen man har lagt till så att man slipper logga in och ut.
         public void AddProdToDatabase()
         {
-            _db.InsertNew("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count, TypeOfProduct = TypeOfProduct, Image = Image });
+            _db.InsertNew("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count, TypeOfProduct = TypeOfProduct, Image = Image,PriceTotal = PriceTotal });
             MessageBox.Show("Product Added", "Added", MessageBoxButton.OK);
+
+
             Products.Clear();
             LoadProdDatabase();
             GetTypeOfProdfromDatabase();
             EmptyBoxes();
+
         }
 
         //Rensar fälten i vyn
