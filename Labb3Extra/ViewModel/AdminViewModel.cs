@@ -135,9 +135,8 @@ namespace Labb3Extra.ViewModel
             {
                 Products.Add(product);
 
-              
             }
-           
+
         }
         private int _priceTotal;
 

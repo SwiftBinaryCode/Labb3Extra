@@ -21,7 +21,7 @@
             <RowDefinition />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-      
+
 
         <StackPanel
             Grid.Row="1"
@@ -48,7 +48,7 @@
                 Width="70"
                 Command="{Binding SeeSumCommand, UpdateSourceTrigger=PropertyChanged}"
                 Content="See sum" />
-     
+
         </StackPanel>
         <Button
             Grid.Column="1"
@@ -96,6 +96,6 @@
             VerticalAlignment="Top"
             Command="{Binding ShopViewCommand, UpdateSourceTrigger=PropertyChanged}"
             Content="Continue shopping" />
-     
+
     </Grid>
 </UserControl>
