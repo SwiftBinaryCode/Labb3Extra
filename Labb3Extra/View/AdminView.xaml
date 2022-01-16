@@ -156,23 +156,20 @@
         <Button
             Grid.Row="1"
             Grid.Column="2"
-            Margin="336,27,0,0"
-            HorizontalAlignment="Left"
+            Margin="0,27,0,0"
+            HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Command="{Binding ResetListCommand}"
-            Content="Reset List" RenderTransformOrigin="0.959,0.585" Grid.ColumnSpan="2" />
-        <Label
-            Grid.Column="2"
-            Margin="326,28,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Content="Label" />
+            Content="Update List"
+            RenderTransformOrigin="0.959,0.585" />
+
         <TextBlock
             Grid.Column="2"
             Margin="298,21,0,0"
-            HorizontalAlignment="Left"
+            HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Text="Sort products"
             TextWrapping="Wrap" />
+     
     </Grid>
 </UserControl>

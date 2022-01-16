@@ -43,16 +43,7 @@ namespace Labb3Extra.ViewModel
             _database.GetCollection<Managers.MongoDB>("Admin");
         }
 
-        public void GoToUserProfile()
-        {
-            _navigationManager.CurrentViewModel = new UserProfileViewModel(_navigationManager, _userManager);
-        }
-
-        private void GoToAdminView()
-        {
-            _navigationManager.CurrentViewModel = new AdminViewModel(_navigationManager, _userManager);
-        }
-
+   
         private User ActiveUser { get; set; }
 
         private string _newUsername;
@@ -87,7 +78,17 @@ namespace Labb3Extra.ViewModel
             set => SetProperty(ref _password, value);
         }
 
-        //Metoder
+        public void GoToUserProfile()
+        {
+            _navigationManager.CurrentViewModel = new UserProfileViewModel(_navigationManager, _userManager);
+        }
+
+        private void GoToAdminView()
+        {
+            _navigationManager.CurrentViewModel = new AdminViewModel(_navigationManager, _userManager);
+        }
+
+        //Registrerar nya användare och kollar om fälten är tomma.
         public void RegisterNewUser()
         {
             if (String.IsNullOrWhiteSpace(NewUsername) || String.IsNullOrWhiteSpace(NewUserPassword))
@@ -101,6 +102,7 @@ namespace Labb3Extra.ViewModel
             EmptyLogIn();
         }
 
+        //Rensar fälten som finns i vyn.
         public void EmptyLogIn()
         {
             NewUsername = null;
@@ -108,7 +110,8 @@ namespace Labb3Extra.ViewModel
             Username = null;
             Password = null;
         }
-
+        
+        //Kollar igenom collectionen av Users i mongo databasen och kollar om användarnamnet finns.
         public void CheckRegisteredUsers(User activeUser)
         {
             var collection = _database.GetCollection<User>("Users");
@@ -132,7 +135,8 @@ namespace Labb3Extra.ViewModel
                 }
             }
         }
-
+        
+        //Kollar igenom collectionen av Admins i mongo databasen för att se om användarnamnet finns.
         public void AdminLogIn()
         {
             var Admincollection = _database.GetCollection<User>("Admin");
@@ -146,6 +150,7 @@ namespace Labb3Extra.ViewModel
             }
         }
 
+        //Kollar om användarnamnet som används är admin eller en vanlig user.
         public void LogInCheck()
         {
             var collection = _database.GetCollection<User>("Users");

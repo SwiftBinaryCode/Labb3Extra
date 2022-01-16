@@ -24,7 +24,8 @@ namespace Labb3Extra.ViewModel
         public RelayCommand AddProductCommand { get; }
         public RelayCommand ResetListCommand { get; }
 
-        //Constructor
+
+
         public AdminViewModel(NavigationManager navigationManager, UserManager userManager)
         {
             _navigationManager = navigationManager;
@@ -39,13 +40,6 @@ namespace Labb3Extra.ViewModel
         }
 
         public User ActiveUser { get; set; }
-
-        public void GoToStartView()
-        {
-            _navigationManager.CurrentViewModel = new StartViewModel(_navigationManager, _userManager);
-        }
-
-        //Propertys
 
         private string _nameOfProduct;
 
@@ -94,19 +88,7 @@ namespace Labb3Extra.ViewModel
                 OnPropertyChanged(nameof(FilteredProducts));
             }
         }
-
-        //restet filter products
-        public void Resetproducts()
-        {
-            FilteredProducts = Products;
-            OnPropertyChanged(nameof(FilteredProducts));
-        }
-
-        private void FilterProductList()
-        {
-            FilteredProducts = new(Products.Where(p => p.TypeOfProduct == _chosenProductType));
-        }
-
+  
         private int _count;
 
         public int Count
@@ -122,7 +104,24 @@ namespace Labb3Extra.ViewModel
             set => SetProperty(ref _image, value);
         }
 
-        //methods
+        public void GoToStartView()
+        {
+            _navigationManager.CurrentViewModel = new StartViewModel(_navigationManager, _userManager);
+        }
+
+        
+        public void Resetproducts()
+        {
+            FilteredProducts = Products;
+            OnPropertyChanged(nameof(FilteredProducts));
+        }
+
+        private void FilterProductList()
+        {
+            FilteredProducts = new(Products.Where(p => p.TypeOfProduct == _chosenProductType));
+        }
+
+        //Hämtar dem olika produkterna från mongo databasen.
         public void LoadProdDatabase()
         {
             var db = new MongoClient();
@@ -135,17 +134,19 @@ namespace Labb3Extra.ViewModel
             }
         }
 
-        //AddProdcuts
+        //Lägger till produkter i mongo databasen, och hämtar den nya produkttypen man har lagt till så att man slipper logga in och ut.
         public void AddProdToDatabase()
         {
             _db.InsertNew("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count, TypeOfProduct = TypeOfProduct, Image = Image });
             MessageBox.Show("Product Added", "Added", MessageBoxButton.OK);
             Products.Clear();
             LoadProdDatabase();
-            emptyBoxes();
+            GetTypeOfProdfromDatabase();
+            EmptyBoxes();
         }
 
-        public void emptyBoxes()
+        //Rensar fälten i vyn
+        public void EmptyBoxes()
         {
             NameOfProduct = null;
             TypeOfProduct = null;
@@ -154,6 +155,7 @@ namespace Labb3Extra.ViewModel
             Image = null;
         }
 
+        //Hämtar dem olika produkt typerna från mongo databasen.
         public void GetTypeOfProdfromDatabase()
         {
             var db = new MongoClient();
@@ -163,8 +165,15 @@ namespace Labb3Extra.ViewModel
 
             foreach (var items in typeofprod)
             {
+                if (TypeOfProduct == TypeOfProduct)
+                {
+                    TypeOfProducts.Remove(items);
+                }
+
                 TypeOfProducts.Add(items);
+
             }
+
         }
     }
 }

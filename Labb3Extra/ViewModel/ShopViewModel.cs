@@ -42,10 +42,7 @@ namespace Labb3Extra.ViewModel
 
         }
 
-        public void GoToUserProfile()
-        {
-            _navigationManager.CurrentViewModel = new UserProfileViewModel(_navigationManager, _userManager);
-        }
+   
 
         private int _count;
 
@@ -62,11 +59,6 @@ namespace Labb3Extra.ViewModel
             get => _image;
             set => SetProperty(ref _image, value);
         }
-
-
-
-
-
         public Product ChosenProduct
         {
             get => _product;
@@ -107,6 +99,10 @@ namespace Labb3Extra.ViewModel
 
             }
         }
+        public void GoToUserProfile()
+        {
+            _navigationManager.CurrentViewModel = new UserProfileViewModel(_navigationManager, _userManager);
+        }
 
         public void Resetproducts()
         {
@@ -119,6 +115,7 @@ namespace Labb3Extra.ViewModel
             FilteredProducts = new(Products.Where(p => p.TypeOfProduct == _chosenProductType));
         }
 
+        //Lägger till produkter i den aktiva kundens kundvagn.
         public void AddProdToCart()
         {
             if (Count == 0 || ChosenProduct == null)
@@ -154,6 +151,7 @@ namespace Labb3Extra.ViewModel
 
         }
 
+        //Hämtar produkterna som finns i mongo databasen.
         public void LoadProdDatabase()
         {
             var db = new MongoClient();
@@ -166,6 +164,7 @@ namespace Labb3Extra.ViewModel
             }
         }
 
+        //Hämtar dem olika produkttyperna som finns i mongodatbasen.
         public void GetTypeOfProdfromDatabase()
         {
             var db = new MongoClient();

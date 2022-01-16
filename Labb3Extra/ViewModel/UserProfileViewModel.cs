@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using MongoDB.Driver;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Labb3Extra.ViewModel
 {
@@ -21,7 +22,12 @@ namespace Labb3Extra.ViewModel
         public ObservableCollection<Product> ActiveUserCart { get; set; } = new();
 
         public ObservableCollection<string> TypeOfProducts { get; set; } = new();
+
         public ObservableCollection<Product> FilteredProducts { get; set; }
+        public RelayCommand StartViewCommand { get; }
+        public RelayCommand ShopViewCommand { get; }
+        public RelayCommand CheckOutCommand { get; }
+        public RelayCommand SeeSumCommand { get; }
 
         public UserProfileViewModel(NavigationManager navigationManager, UserManager userManager)
         {
@@ -34,30 +40,11 @@ namespace Labb3Extra.ViewModel
             CheckOutCommand = new RelayCommand(() => CheckOut());
             SeeSumCommand = new RelayCommand(() => SumCount());
             LoadActiveUserCart();
-            Loadproddatabase();
+            LoadProdDatabase();
             
         }
 
-        public RelayCommand StartViewCommand { get; }
-        public RelayCommand ShopViewCommand { get; }
-        public RelayCommand CheckOutCommand { get; }
-        public RelayCommand SeeSumCommand { get; }
-
-
-        public void GoToStartView()
-        {
-            _navigationManager.CurrentViewModel = new StartViewModel(_navigationManager, _userManager);
-        }
-
-        public void GoToShopView()
-        {
-            _navigationManager.CurrentViewModel = new ShopViewModel(_navigationManager, _userManager);
-        }
-
-        public void CheckOut()
-        {
-            _store.CheckOutUser(_userManager.ActiveUser);
-        }
+   
 
         private User _activeUser;
 
@@ -90,6 +77,21 @@ namespace Labb3Extra.ViewModel
             set => SetProperty(ref _priceTotal, value);
         }
 
+        public async Task CheckOut()
+        {
+            await _store.CheckOutUser(_userManager.ActiveUser);
+        }
+        public void GoToStartView()
+        {
+            _navigationManager.CurrentViewModel = new StartViewModel(_navigationManager, _userManager);
+        }
+
+        public void GoToShopView()
+        {
+            _navigationManager.CurrentViewModel = new ShopViewModel(_navigationManager, _userManager);
+        }
+
+        //Räknar ut total summan för produkterna som finns i den aktiva kundens kundvagn.
         public string SumCount()
         {
             double sum = 0;
@@ -101,6 +103,7 @@ namespace Labb3Extra.ViewModel
             return PriceTotal;
         }
 
+        //Hämtar den aktiva kundens produkter som dem har lagt i sin kundvagn
         public void LoadActiveUserCart()
         {
             foreach (var product in _userManager.ActiveUser.Cart)
@@ -109,7 +112,8 @@ namespace Labb3Extra.ViewModel
             }
         }
 
-        public void Loadproddatabase()
+        //Hämtar dem olika produkterna som finns i mongodatabasen.
+        public void LoadProdDatabase()
         {
             var db = new MongoClient();
             _database = db.GetDatabase("Store");
