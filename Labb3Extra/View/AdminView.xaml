@@ -83,17 +83,24 @@
                 Margin="90,175,90,195"
                 Text="{Binding Image, UpdateSourceTrigger=PropertyChanged}" />
             <Button
-                Margin="0,0,10,0"
+                Margin="0,155,10,0"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Center"
+                VerticalAlignment="Top"
                 Command="{Binding AddProductCommand}"
                 Content="Add Product" />
+
+            <Button
+                Margin="0,180,-2,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Command="{Binding UpdateProductCommand}"
+                Content="Update Product" />
             <TextBlock
-                Width="35"
+                Width="100"
                 Height="18"
                 Margin="0,30,0,0"
                 HorizontalAlignment="Center"
-                Text="Count"
+                Text="Set New Amount"
                 TextWrapping="Wrap" />
             <TextBox
                 Width="60"
@@ -101,19 +108,7 @@
                 Margin="0,219,0,151"
                 HorizontalAlignment="Center"
                 Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBox
-                Width="60"
-                Height="20"
-                Margin="310,132,0,238"
-                HorizontalAlignment="Right"
-                Text="{Binding PriceTotal, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock
-                Width="60"
-                Height="18"
-                Margin="0,116,0,256"
-                HorizontalAlignment="Right"
-                Text="Total price"
-                TextWrapping="Wrap" />
+
         </Grid>
 
         <StackPanel

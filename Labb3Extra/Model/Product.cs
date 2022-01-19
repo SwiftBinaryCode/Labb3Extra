@@ -1,24 +1,33 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 
 namespace Labb3Extra.Model
 {
-    internal class Product : ObservableObject
+    public class Product : ObservableObject
     {
         private readonly IMongoDatabase _database;
 
+        [BsonId]
         public ObjectId Id { get; set; }
+
+        [BsonElement]
         public string NameOfProduct { get; set; }
 
+        [BsonElement]
         public string TypeOfProduct { get; set; }
 
+        [BsonElement]
         public string Image { get; set; }
 
+        [BsonElement]
         public int Price { get; set; }
 
+        [BsonElement]
         public int PriceTotal { get; set; }
 
+        [BsonElement]
         public int Count { get; set; }
 
         public Product()

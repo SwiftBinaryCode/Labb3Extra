@@ -33,5 +33,13 @@ namespace Labb3Extra.Managers
             var filter = Builders<Product>.Filter.Eq("_id", product.Id);
             return collection.ReplaceOneAsync(filter, product, new ReplaceOptions { IsUpsert = true });
         }
+
+        //public Task UpsertProd(string dbCollection, Product product)
+        //{
+        //    var collection = _database.GetCollection<Product>(dbCollection);
+        //    var filter = Builders<Product>.Filter.Eq("NameOfProduct", product.NameOfProduct);
+        //    return collection.ReplaceOneAsync(filter, product, new ReplaceOptions { IsUpsert = true });
+
+        //}
     }
 }
