@@ -54,7 +54,7 @@
                 Width="200"
                 Height="20"
                 Margin="90,47,90,323"
-                Text="{Binding NameOfProduct, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding NameOfProduct, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock
                 Width="120"
                 Margin="130,72,130,-72"
@@ -63,7 +63,7 @@
                 Width="200"
                 Height="20"
                 Margin="90,91,90,279"
-                Text="{Binding TypeOfProduct, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding TypeOfProduct, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock
                 Width="120"
                 Margin="130,116,130,-116"
@@ -72,7 +72,7 @@
                 Width="200"
                 Height="20"
                 Margin="90,132,90,238"
-                Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock
                 Width="120"
                 Margin="130,157,130,-157"
@@ -81,7 +81,7 @@
                 Width="200"
                 Height="20"
                 Margin="90,175,90,195"
-                Text="{Binding Image, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding Image, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <Button
                 Margin="0,155,10,0"
                 HorizontalAlignment="Right"
@@ -90,11 +90,12 @@
                 Content="Add Product" />
 
             <Button
-                Margin="0,180,-2,0"
+                Margin="0,127,13,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Command="{Binding UpdateProductCommand}"
-                Content="Update Product" />
+                Command="{Binding EmptyTextBoxCommand}"
+                Content="Clear Fields" />
+
             <TextBlock
                 Width="100"
                 Height="18"
@@ -107,16 +108,14 @@
                 Height="20"
                 Margin="0,219,0,151"
                 HorizontalAlignment="Center"
-                Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}" />
+                Text="{Binding Count, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
         </Grid>
 
         <StackPanel
             Grid.Row="1"
             Grid.RowSpan="2"
-            Grid.ColumnSpan="2" >
-
-        </StackPanel>
+            Grid.ColumnSpan="2" />
         <TextBlock
             Grid.Row="1"
             Grid.Column="2"
@@ -136,7 +135,7 @@
         <ListView
             Grid.Row="1"
             Grid.Column="2"
-            Width="300"
+            Width="315"
             Height="150"
             Margin="5,0,0,0"
             HorizontalAlignment="Left"
@@ -176,7 +175,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Command="{Binding ResetListCommand}"
-            Content="Update List"
+            Content="Reset List"
             RenderTransformOrigin="0.959,0.585" />
 
         <TextBlock

@@ -42,7 +42,7 @@
                 Content="Sort Product type"
                 FontSize="10" />
             <ComboBox
-                Width="60"
+                Width="80"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 ItemsSource="{Binding TypeOfProducts, UpdateSourceTrigger=PropertyChanged}"

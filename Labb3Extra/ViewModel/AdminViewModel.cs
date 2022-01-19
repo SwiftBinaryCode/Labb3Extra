@@ -26,7 +26,7 @@ namespace Labb3Extra.ViewModel
         public RelayCommand AddProductCommand { get; }
         public RelayCommand ResetListCommand { get; }
 
-        public RelayCommand UpdateProductCommand { get; }
+        public RelayCommand EmptyTextBoxCommand { get; }
 
 
 
@@ -39,7 +39,7 @@ namespace Labb3Extra.ViewModel
             StartViewCommand = new RelayCommand(GoToStartView);
             AddProductCommand = new RelayCommand(AddProdToDatabase);
             ResetListCommand = new RelayCommand(Resetproducts);
-            //UpdateProductCommand = new RelayCommand(UpdateProduct);
+            EmptyTextBoxCommand = new RelayCommand(EmptyBoxes);
 
 
             LoadProdDatabase();
@@ -64,9 +64,17 @@ namespace Labb3Extra.ViewModel
             {
                 if (_product != value)
                 {
-                    //_product = value;
                     _product = value ?? new Product();
+
                     OnPropertyChanged(nameof(ChosenProduct));
+
+                    //Gör det möjligt för admin att trycka på en produkt i listan och få fram informationen i textboxarna.Ifall det är svårt att läsa information i listan om varje produkt.
+                    //Sedan kan hen trycka på clear fields för att tömma fälten igen.
+                    NameOfProduct = ChosenProduct.NameOfProduct;
+                    Price = ChosenProduct.Price;
+                    TypeOfProduct = ChosenProduct.TypeOfProduct;
+                    Image = ChosenProduct.Image;
+                    Count = ChosenProduct.Count;
                     
                 }
             }
@@ -152,13 +160,8 @@ namespace Labb3Extra.ViewModel
             foreach (var product in collection)
             {
 
-                if (NameOfProduct == NameOfProduct)
-                {
-                    Products.Remove(product);
-                }
-
                 Products.Add(product);
-
+               
             }
 
         }
@@ -168,8 +171,8 @@ namespace Labb3Extra.ViewModel
         //Lägger till produkter i mongo databasen, och hämtar den nya produkttypen man har lagt till så att man slipper logga in och ut.
         public void AddProdToDatabase()
         {
-            if (String.IsNullOrWhiteSpace(NameOfProduct) || String.IsNullOrWhiteSpace(TypeOfProduct) || Price == 0 || Count == 0
-                )
+            if (String.IsNullOrWhiteSpace(NameOfProduct) || String.IsNullOrWhiteSpace(TypeOfProduct) || Price == 0 || Count == 0)
+                
             {
                 MessageBox.Show("Please enter values", "Error", MessageBoxButton.OK);
                 EmptyBoxes();
@@ -177,10 +180,9 @@ namespace Labb3Extra.ViewModel
 
             PriceTotal = Price * Count;
 
-            _db.UpsertProduct("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count, TypeOfProduct = TypeOfProduct, Image = Image, PriceTotal = PriceTotal });
+            _db.InsertNew("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count, TypeOfProduct = TypeOfProduct, Image = Image, PriceTotal = PriceTotal });
             MessageBox.Show("Product Added", "Added", MessageBoxButton.OK);
-
-
+           
 
             Products.Clear();
             LoadProdDatabase();
@@ -188,23 +190,6 @@ namespace Labb3Extra.ViewModel
             EmptyBoxes();
 
         }
-        //public void UpdateProduct()
-        //{
-          
-        //    PriceTotal = Price * Count;
-
-
-        //    _db.UpsertProduct("Products", new Product { NameOfProduct = NameOfProduct, Price = Price, Count = Count, TypeOfProduct = TypeOfProduct, Image = Image, PriceTotal = PriceTotal });
-        //    MessageBox.Show("Product Added", "Added", MessageBoxButton.OK);
-
-
-        //    //Products.Clear();
-        //    //LoadProdDatabase();
-        //    GetTypeOfProdfromDatabase();
-        //    EmptyBoxes();
-
-
-        //}
 
         //Rensar fälten i vyn
         public void EmptyBoxes()
